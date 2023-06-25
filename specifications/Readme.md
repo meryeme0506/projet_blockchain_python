@@ -16,10 +16,6 @@ Le composant BIP39 combine une clé secrète avec le message à hacher pour prod
 **Création de portefeuilles de cryptomonnaie** : BIP39 peut être utilisé pour générer une phrase de récupération lors de la création d'un nouveau portefeuille de cryptomonnaie.
 **Récupération de portefeuilles de cryptomonnaie** : Si un utilisateur perd l'accès à son portefeuille de cryptomonnaie, il peut utiliser la phrase de récupération générée par BIP39 pour récupérer l'accès à son portefeuille.
 
-## Schéma de blocs
-[Application] --> [BIP39 Composant] --> [SHA256]
-L'application interagit avec le composant BIP39, qui à son tour utilise le composant SHA256(Secure Hash Algorithm 256-bit).
-
 ## Interface et intéraction
 L'interface du composant BIP39 est conçue pour être simple et directe. Elle fournit une fonction ****generate(word_count)**** qui prend un nombre de mots en entrée, et renvoie une phrase de récupération.
 

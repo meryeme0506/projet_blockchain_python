@@ -9,7 +9,7 @@
 namespace py = pybind11;
 
 #include "bip.h"
-#include "utils.h"
+#include "bip_functions.h"
 
 using namespace std;
 
@@ -134,7 +134,7 @@ PYBIND11_MODULE(bip39, comp) {
 	.def("set_langage", &Bip39::set_langage)
 	.def("get_recovery_phrase", &Bip39::get_recovery_phrase)
 	.def("get_entropy", &Bip39::get_entropy)
-    .def("create_recovery_phrase", &Bip39::create_recovery_phrase)
+        .def("create_recovery_phrase", &Bip39::create_recovery_phrase)
 	.def("create_recovery_phrase_from_entropy", &Bip39::create_recovery_phrase_from_entropy)
 	.def("extract_entropy", &Bip39::extract_entropy)
 	.def("validate_recovery_phrase", &Bip39::validate_recovery_phrase);

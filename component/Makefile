@@ -16,7 +16,7 @@ include ../pybind11.mk
 
 test: $(LIBSO)
 	echo "Test execution"
-	python3 -m pytest -s test.py
+	python3  test.py
 
 	
 clean:

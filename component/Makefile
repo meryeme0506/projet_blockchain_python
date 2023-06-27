@@ -5,7 +5,7 @@ LIBS = `python3-config --ldflags` -lssl -lcrypto
 COMPOSANT = bip39
 
 LIBSO = ${COMPOSANT}.so
-LIBSO_OBJS = ${COMPOSANT}.o sha256/sha256/sha256.o
+LIBSO_OBJS = ${COMPOSANT}.o sha256.o
 
 
 all: ${LIBSO}

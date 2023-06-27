@@ -5,7 +5,7 @@
 #include <pybind11/stl.h>
 #include <random>
 #include <bitset>
-#include "sha256/sha256/sha256.h"
+#include "sha256.h"
 
 
 namespace py = pybind11;

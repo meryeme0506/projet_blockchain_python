@@ -103,7 +103,7 @@ public:
     }
 };
 
-PYBIND11_MODULE(bip39_component, m) {
+PYBIND11_MODULE(bip39, m) {
     m.doc() = "BIP39 Encoder/Decoder";
 
     py::class_<BIP39Encoder>(m, "BIP39Encoder")

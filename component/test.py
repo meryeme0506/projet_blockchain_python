@@ -1,60 +1,20 @@
 import pytest
-import bip
-def test_create_random_entropy():
-     # Test de la génération d'entropie
-     try:
-         bip.create_random_entropy()
-     except Exception:
-         assert False, "Expected no exception when generating entropy"
-def test_create_checksum():
-     # Test de la génération de la somme de contrôle
-     try:
-         entropy = bip.create_random_entropy()
-         bip.create_checksum(entropy)
-     except Exception:
-         assert False, "Expected no exception when generating checksum"
-def test_convert_to_recovery_phrase():
-     # Test de la conversion en phrase de récupération
-     try:
-         entropy = bip.create_random_entropy()
-         checksum = bip.create_checksum(entropy)
-         bip.convert_to_recovery_phrase(checksum)
-     except Exception:
-         assert False, "Expected no exception when converting to recovery phrase"
+import bip39
 
-def test_create_recovery_phrase():
-     # Test avec un nombre de mots valide
-     try:
-         bip.create_recovery_phrase(12)
-     except Exception:
-         assert False, "Expected no exception for valid word count"
+# Créer une instance de Bip39
+bip = bip39.Bip39()
 
-     # Test avec un nombre de mots en dehors de l'intervalle [12, 15, 18, 21, 24]
-     try:
-         bip.create_recovery_phrase(10)
-     except ValueError:
-         pass
-     else:
-         assert False, "Expected ValueError for word count outside of valid range"
-def test_create_recovery_phrase_from_entropy():
-     # Test de la création de la phrase de récupération à partir d'une entropie donnée
-     try:
-         entropy = bip.create_random_entropy()
-         bip.create_recovery_phrase_from_entropy(entropy)
-     except Exception:
-         assert False, "Expected no exception when creating recovery phrase from given entropy"
-def test_extract_entropy():
-     # Test de l'extraction de l'entropie à partir d'une phrase de récupération
-     try:
-         recovery_phrase = bip.create_recovery_phrase(12)
-         bip.extract_entropy(recovery_phrase)
-     except Exception:
-         assert False, "Expected no exception when extracting entropy from recovery phrase"
-def test_validate_recovery_phrase():
-     # Test de la validation de la phrase de récupération
-     try:
-         recovery_phrase = bip.create_recovery_phrase(12)
-         entropy = bip.extract_entropy(recovery_phrase)
-         bip.validate_recovery_phrase(entropy, recovery_phrase)
-     except Exception:
-         assert False, "Expected no exception when validating recovery phrase"
+# Générer une phrase mnémonique à partir d'une clé privée aléatoire
+mnemonic = bip.create_recovery_phrase(12)
+assert mnemonic, "La phrase mnémonique ne devrait pas être vide"
+
+# Extraire l'entropie (qui est utilisée pour générer la clé privée) de la phrase mnémonique
+entropy = bip.extract_entropy(mnemonic)
+assert entropy, "L'entropie ne devrait pas être vide"
+
+# Valider la phrase mnémonique en utilisant l'entropie
+is_valid = bip.validate_recovery_phrase(entropy, mnemonic)
+assert is_valid, "La phrase mnémonique devrait être valide"
+
+# Afficher la clé (entropie)
+print("La clé (entropie) est : ", entropy)

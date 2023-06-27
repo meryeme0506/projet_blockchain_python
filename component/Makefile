@@ -1,7 +1,9 @@
-CPPFLAGS += -I /usr/include/python3.7m
-LIBS=-lpython3.7m
+CPPFLAGS += `python3-config --includes`
+CPPFLAGS += -I/usr/include/openssl
+LIBS=`python3-config --ldflags`
+LIBS += -lssl -lcrypto
 
-COMPOSANT = bip
+COMPOSANT = bip39
 
 LIBSO = ${COMPOSANT}.so
 LIBSO_OBJS = ${COMPOSANT}.o 
@@ -18,7 +20,7 @@ test: $(LIBSO)
 
 	
 clean:
-	rm -f ${LIBSO}  ${LIBSO_OBJS} ${DESTINATION_LIBSO}
+	rm -f ${LIBSO}  ${LIBSO_OBJS}
 
 
 ${DESTINATION_LIBSO}: ${LIBSO}

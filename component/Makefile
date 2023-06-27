@@ -7,7 +7,6 @@ COMPOSANT = bip39
 LIBSO = ${COMPOSANT}.so
 LIBSO_OBJS = ${COMPOSANT}.o sha256.o
 
-
 all: ${LIBSO}
 
 include ../gcc.mk
@@ -18,9 +17,10 @@ test: $(LIBSO)
 	python3 test.py
 
 clean:
-	rm -f ${LIBSO}  ${LIBSO_OBJS}
+	rm -f ${LIBSO} ${LIBSO_OBJS}
 
 ${LIBSO}: ${LIBSO_OBJS}
 	$(CXX) -shared -o $@ $^ $(LIBS)
+
 
 

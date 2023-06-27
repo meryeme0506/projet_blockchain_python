@@ -1,13 +1,14 @@
 #include <string>
 
     using namespace std;
-	
+
 class Bip39 {
     
 
 	string recovery_phrase_;
 	string language_;
 	string entropy_;
+	string mnemonic;
 
 	int checksum;
 	int word_count;

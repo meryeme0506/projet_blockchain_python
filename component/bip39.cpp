@@ -46,20 +46,22 @@ private:
     }
 
     std::string convertToRecoveryPhrase(std::string& entropyWithChecksum) {
-        std::string recoveryPhrase;
-        recoveryPhrase.reserve(entropyWithChecksum.size() * 3 / 4); // Chaque groupe de 4 bits sera converti en un mot
+    std::string recoveryPhrase;
+    recoveryPhrase.reserve(entropyWithChecksum.size() * 3 / 4); // Chaque groupe de 4 bits sera converti en un mot
 
-        for (std::size_t i = 0; i < entropyWithChecksum.size(); i += 11) {
-            std::string bits = entropyWithChecksum.substr(i, 11);
-            std::size_t index = std::bitset<11>(bits).to_ulong();
-            recoveryPhrase += wordList[index];
-            recoveryPhrase.push_back(' ');
-        }
+    for (std::size_t i = 0; i < entropyWithChecksum.size(); i += 11) {
+        std::string bits = entropyWithChecksum.substr(i, 11);
+        unsigned long long index = std::bitset<11>(bits).to_ullong();
+        recoveryPhrase += wordList[index];
+        recoveryPhrase.push_back(' ');
+    }
 
-        // Supprimer l'espace final
-        recoveryPhrase.pop_back();
+    // Supprimer l'espace final
+    recoveryPhrase.pop_back();
 
-        return recoveryPhrase;    }
+    return recoveryPhrase;
+}
+
 
 public:
     BIP39Encoder(std::vector<std::string> wordList) : wordList(wordList) {}

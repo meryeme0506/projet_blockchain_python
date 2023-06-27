@@ -8,8 +8,8 @@
 
 namespace py = pybind11;
 
-#include "bip.h"
-#include "bip_functions.h"
+#include "bip39.h"
+#include "bip39_functions.h"
 
 using namespace std;
 

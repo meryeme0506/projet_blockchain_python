@@ -1,5 +1,5 @@
 import pytest
-import bip39 as bip
+import bip
 
 def test_create_recovery_phrase():
     # Test avec un nombre de mots valide

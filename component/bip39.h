@@ -1,8 +1,9 @@
 #include <string>
 
+    using namespace std;
+	
 class Bip39 {
     
-    using namespace std;
 
 	string recovery_phrase_;
 	string language_;

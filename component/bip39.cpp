@@ -128,9 +128,9 @@ bool Bip39::validate_recovery_phrase(string& entropy_sequence, string& recovery_
 
 PYBIND11_MODULE(bip39, comp) {
     py::class_<Bip39>(comp, "Bip39")
-    .def(py::init<const string &>(), py::arg("langage") = "en")
-	.def("get_langage", &Bip39::get_langage)
-	.def("set_langage", &Bip39::set_langage)
+    .def(py::init<const string &>(), py::arg("language") = "en")
+	.def("get_language", &Bip39::get_language)
+	.def("set_language", &Bip39::set_language)
 	.def("get_recovery_phrase", &Bip39::get_recovery_phrase)
 	.def("get_entropy", &Bip39::get_entropy)
     .def("create_recovery_phrase", &Bip39::create_recovery_phrase)

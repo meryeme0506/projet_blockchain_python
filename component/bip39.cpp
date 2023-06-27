@@ -3,6 +3,9 @@
 #include <openssl/sha.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <random>
+#include <bitset>
+
 
 namespace py = pybind11;
 

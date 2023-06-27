@@ -44,7 +44,7 @@ string Bip39::create_checksum(string& entropy_sequence) const {
 
 string Bip39::convert_to_recovery_phrase(string& checksum_sequence) const {
 	vector<string> v;
-	auto words_dict = get_words(this->langage_);
+	auto words_dict = get_words(this->language_);
 
 	for (int i = 0; i < checksum_sequence.length(); i += 11) {
 		auto sub = checksum_sequence.substr(i, 11);
@@ -71,8 +71,8 @@ string Bip39::create_recovery_phrase(int word_quantity) {
 	auto entropy_sequence = this->create_random_entropy();
 	entropy_sequence = hex_str_to_bin_str(entropy_sequence);
 	auto checksum_sequence = this->create_checksum(entropy_sequence);
-	this->mnemonic_  = this->convert_to_recovery_phrase(checksum_sequence);
-	return this->mnemonic_;
+	this->mnemonic  = this->convert_to_recovery_phrase(checksum_sequence);
+	return this->mnemonic;
 }
 
 string Bip39::create_recovery_phrase_from_entropy(string given_entropy) {
@@ -87,8 +87,8 @@ string Bip39::create_recovery_phrase_from_entropy(string given_entropy) {
 
 	auto entropy_sequence = hex_str_to_bin_str(given_entropy);
 	auto checksum_sequence = this->create_checksum(entropy_sequence);
-	this->mnemonic_ = this->convert_to_recovery_phrase(checksum_sequence);
-	return this->mnemonic_;
+	this->mnemonic = this->convert_to_recovery_phrase(checksum_sequence);
+	return this->mnemonic;
 }
 
 string Bip39::extract_entropy(string recovery_phrase) {
@@ -98,7 +98,7 @@ string Bip39::extract_entropy(string recovery_phrase) {
 	while (ss >> buf) {
 		words.push_back(buf);
 	}
-	auto words_dict = get_words(this->langage_);
+	auto words_dict = get_words(this->language_);
 	string words_string_binary;
 	this->word_count = words.size();
 

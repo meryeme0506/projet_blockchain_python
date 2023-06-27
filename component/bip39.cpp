@@ -4,6 +4,8 @@
 #include <bitset>
 #include <string>
 #include <pybind11/pybind11.h>
+#include <boost/crc.hpp>
+
 
 namespace py = pybind11;
 
@@ -21,15 +23,23 @@ string Bip39::create_random_entropy() {
 }
 
 string Bip39::create_checksum(string& entropy_sequence) const {
-	string result;
+    string result;
 
-	string entropy_sha256 = sha256(hex_str_to_bin_str(entropy_sequence));
-	string sha256_bin = hex_str_to_bin_str(entropy_sha256);
+    // Convert entropy_sequence to binary data
+    vector<unsigned char> data(entropy_sequence.begin(), entropy_sequence.end());
 
-	string result_to_append = sha256_bin.substr(0, this->checksum);
-	result = entropy_sequence + result_to_append;
+    // Calculate CRC32 checksum
+    boost::crc_32_type crc32;
+    crc32.process_bytes(data.data(), data.size());
 
-	return result;
+    // Convert checksum to binary string
+    string checksum = bitset<32>(crc32.checksum()).to_string();
+
+    // Append checksum to entropy_sequence
+    string result_to_append = checksum.substr(0, this->checksum);
+    result = entropy_sequence + result_to_append;
+
+    return result;
 }
 
 string Bip39::convert_to_recovery_phrase(string& checksum_sequence) const {

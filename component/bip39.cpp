@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 #include <vector>
 #include <openssl/sha.h>
 #include <pybind11/pybind11.h>

@@ -16,7 +16,8 @@ namespace py = pybind11;
 class BIP39Encoder {
 private:
     std::vector<std::string> wordList; 
-
+	// crée une séquence aléatoire de caractères qui 
+	// servira d'entropie pour la création de la phrase secrète
     std::string createRandomEntropy() {
         std::random_device rd;
         std::mt19937 gen(rd());
@@ -32,6 +33,7 @@ private:
         return entropy;
     }
 
+	//crée une somme de contrôle à partir de la séquence d'entropie
     std::string createChecksum(std::string& entropy) {
         // Calculer le hash SHA256 de l'entropie
         unsigned char hash[SHA256_DIGEST_LENGTH];
@@ -48,14 +50,22 @@ private:
 
         return checksum;
     }
-
+	
+	// transforme la séquence de caractères contenant l'entropie 
+	// et la somme de contrôle en une phrase secrète
     std::string convertToRecoveryPhrase(std::string& entropyWithChecksum) {
     std::string recoveryPhrase;
     recoveryPhrase.reserve(entropyWithChecksum.size() * 3 / 4); // Chaque groupe de 4 bits sera converti en un mot
 
     for (std::size_t i = 0; i < entropyWithChecksum.size(); i += 11) {
         std::string bits = entropyWithChecksum.substr(i, 11);
-        unsigned long long index = std::bitset<11>(bits).to_ullong();
+
+		if (bits.length() != 11) {
+			std::cerr << "Error: 'bits' length is not 11, it's " << bits.length() << "\n";
+			std::cerr << "entropyWithChecksum length: " << entropyWithChecksum.length() << ", i: " << i << "\n";
+		}
+		unsigned long long index = std::bitset<11>(bits).to_ullong();
+
         recoveryPhrase += wordList[index];
         recoveryPhrase.push_back(' ');
     }
@@ -70,6 +80,7 @@ private:
 public:
     BIP39Encoder(std::vector<std::string> wordList) : wordList(wordList) {}
 
+	// crée une phrase secrète avec un nombre spécifique de mots
     std::string createRecoveryPhrase(int wordQuantity) {
         std::string entropy = createRandomEntropy();
         std::string checksum = createChecksum(entropy);
@@ -77,23 +88,31 @@ public:
 
         return convertToRecoveryPhrase(entropyWithChecksum);
     }
-
+	
+	// crée une phrase secrète à partir d'une entropie donnée
     std::string createRecoveryPhraseFromEntropy(std::string givenEntropy) {
         std::string checksum = createChecksum(givenEntropy);
         std::string entropyWithChecksum = givenEntropy + checksum;
 
         return convertToRecoveryPhrase(entropyWithChecksum);
     }
-
+	
+	// extrait l'entropie à partir d'une phrase secrète
     std::string extractEntropy(std::string recoveryPhrase) {
     	std::string entropy;
 
-    // Split the recovery phrase into words
+    // vérifie si une phrase secrète correspond à une séquence d'entropie donnée
 		std::istringstream iss(recoveryPhrase);
 		std::vector<std::string> words((std::istream_iterator<std::string>(iss)), std::istream_iterator<std::string>());
 
     	for (auto &word : words) {
 			std::size_t index = std::find(wordList.begin(), wordList.end(), word) - wordList.begin();
+
+			// Debugging code
+			if (index >= 2048) {
+				std::cerr << "Error: 'index' is not less than 2048, it's " << index << "\n";
+			}
+
 			std::string bits = std::bitset<11>(index).to_string();
 			entropy += bits;
     	}

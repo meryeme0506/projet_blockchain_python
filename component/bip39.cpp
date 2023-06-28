@@ -5,6 +5,9 @@
 #include <pybind11/stl.h>
 #include <random>
 #include <bitset>
+#include <sstream>  
+#include <algorithm>
+#include <iterator>
 #include "sha256.h"
 
 

@@ -83,20 +83,21 @@ public:
     }
 
     std::string extractEntropy(std::string recoveryPhrase) {
-        std::string entropy;
-        entropy.reserve(recoveryPhrase.size() * 4 / 3); // Chaque mot est converti en un groupe de 4 bits
+    	std::string entropy;
 
-        // Supprimer les espaces
-        recoveryPhrase.erase(std::remove(recoveryPhrase.begin(), recoveryPhrase.end(), ' '), recoveryPhrase.end());
-        for (std::size_t i = 0; i < recoveryPhrase.size(); i += 4) {
-            std::string word = recoveryPhrase.substr(i, 4);
-            std::size_t index = std::find(wordList.begin(), wordList.end(), word) - wordList.begin();
-            std::string bits = std::bitset<11>(index).to_string();
-            entropy += bits;
-        }
+    // Split the recovery phrase into words
+		std::istringstream iss(recoveryPhrase);
+		std::vector<std::string> words((std::istream_iterator<std::string>(iss)), std::istream_iterator<std::string>());
 
-        return entropy;
-    }
+    	for (auto &word : words) {
+			std::size_t index = std::find(wordList.begin(), wordList.end(), word) - wordList.begin();
+			std::string bits = std::bitset<11>(index).to_string();
+			entropy += bits;
+    	}
+
+    return entropy;
+}
+
 
     bool validateRecoveryPhrase(std::string& recoveryPhrase) {
         std::string extractedEntropy = extractEntropy(recoveryPhrase);

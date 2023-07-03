@@ -30,14 +30,14 @@ correspondant.
 
 1. `create_recovery_phrase(int word_quantity)`: Cette fonction crée une phrase secrète avec un nombre spécifique de mots.
 
-2. `read_recovery_phrase(std::string& recovery_phrase)`: Cette fonction vérifie si
+2. `validateRecoveryPhrase(std::string& recoveryPhrase)`: Cette fonction vérifie si
 une phrase secrète correspond à un portefeuille.
 
 ## Gestion des erreurs
 
 1. `create_recovery_phrase(int word_quantity)`: Une exception est déclenchée si le nombre de mots spécifié n'est pas dans l'intervalle autorisé (par exemple, 12, 15, 18, 21, 24).
 
-2. `read_recovery_phrase(std::string& recovery_phrase)`: Une exception est déclenchée si la phrase de récupération est vides,
+2. `validateRecoveryPhrase(std::string& recoveryPhrase)`: Une exception est déclenchée si la phrase de récupération est vides,
 ou si la phrase de récupération ne correspond pas à un portefeuille.
 
 
@@ -66,11 +66,27 @@ def test_create_recovery_phrase():
         pass
     else:
         assert False, "Expected ValueError for word count outside of valid range"
+
+def test_validateRecoveryPhrase():
+    # Test avec un bonne phrase mnémonique
+    try:
+        validateRecoveryPhrase(A RENTRER)
+    except Exception:
+        assert False, "Expected no exception"
+
+    # Test avec un phrases mnémonique erronées
+    try:
+        validateRecoveryPhrase("    ")
+    except ValueError:
+        assert False, "Expected invalid_argument for empty mnemonic phrase"    
+
+    try:
+        validateRecoveryPhrase(A RENTRER)
+    except ValueError:
+        assert False, "Expected invalid_argument for mnemonic phrase corresponding to no wallet"        
 ```
 
-Ce test vérifie que la fonction create_recovery_phrase(int word_quantity) crée une phrase de récupération avec le bon nombre de mots et qu'elle lève une exception ValueError lorsque le nombre de mots est en dehors de l'intervalle valide.
-
-Des tests similaires peuvent être créés pour les autres fonctions.
+Ces tests vérifie que la fonction create_recovery_phrase(int word_quantity) crée une phrase de récupération avec le bon nombre de mots et qu'elle lève une exception ValueError lorsque le nombre de mots est en dehors de l'intervalle valide et qu'une phrase mnémonique valable est rentré pour validateRecoveryPhrase.
 
 ### Exécution des tests
 Pour exécuter les tests, il faudra simplement utiliser la commande python -m test test_bip39.

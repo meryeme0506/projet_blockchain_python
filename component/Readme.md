@@ -1,3 +1,5 @@
+version : 1.3
+
 ****Auteurs**** : Meryeme HAMAN, Emilie PATHAMMAVONG et Alize BOUDIN
 
 # Codeur/Decodeur BIP39 : Un Joyau Cryptographique pour les Portefeuilles de Cryptomonnaies

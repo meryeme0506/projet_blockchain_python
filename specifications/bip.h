@@ -1,7 +1,7 @@
 #include <string>
 
 class Bip39 {
-    
+
     using namespace std;
 
 	string recovery_phrase_;
@@ -24,7 +24,7 @@ class Bip39 {
 	 * @return Chaîne de caractères de l'entropie avec la somme de contrôle ajoutée.
      */
 	string create_checksum(string& entropy_sequence) const;
-	
+
 	/**
      * @brief Génère la phrase de récupération
 	 * @param checksum_sequence Séquence d'entropie avec somme de contrôle
@@ -65,6 +65,18 @@ public:
 	 * @return Booléen indiquant si l'entropie donnée donne la même phrase de récupération
 	 */
 	bool validate_recovery_phrase(string& entropy_sequence, string& recovery_phrase);
+
+std::string extractEntropy(std::string recoveryPhrase);
+
+std::string createChecksum(std::string& entropy);
+
+std::string convertToRecoveryPhrase(std::string& entropyWithChecksum);
+
+std::string createRecoveryPhraseFromEntropy(std::string givenEntropy);
+
+bool validateRecoveryPhrase(std::string& recoveryPhrase);
+
+
 
 	// Getters setters
 	string get_language() const { return this->language_; };

@@ -3,6 +3,7 @@
 #include <vector>
 #include <bitset>
 #include <string>
+#include <cctype>
 #include <pybind11/pybind11.h>
 #include "sha256/sha256/sha256.h"
 
@@ -112,30 +113,111 @@ string Bip39::extract_entropy(string recovery_phrase) {
 	return this->entropy_;
 }
 
-bool Bip39::validate_recovery_phrase(string& entropy_sequence, string& recovery_phrase) {
+// bool Bip39::validate_recovery_phrase(string& entropy_sequence, string& recovery_phrase) {
+//
+// 	int checksum = entropy_sequence.length() * 4 / 32;
+// 	int word_quantity = (checksum + entropy_sequence.length() * 4) / 11;
+//
+// 	this->word_count = word_quantity;
+//         this->checksum = checksum;
+//         this->entropy_length = entropy_sequence.length() * 4;
+//
+// 	entropy_sequence = hex_str_to_bin_str(entropy_sequence);
+//         auto checksum_sequence = this->create_checksum(entropy_sequence);
+//         auto expected_recovery_phrase  = this->convert_to_recovery_phrase(checksum_sequence);
+// 	return expected_recovery_phrase.compare(recovery_phrase) == 0;
+// }
 
-	int checksum = entropy_sequence.length() * 4 / 32;
-	int word_quantity = (checksum + entropy_sequence.length() * 4) / 11;
+std::string Bip39::extractEntropy(std::string recoveryPhrase) {
+	std::string entropy;
 
-	this->word_count = word_quantity;
-        this->checksum = checksum;
-        this->entropy_length = entropy_sequence.length() * 4;
+// vérifie si une phrase secrète correspond à une séquence d'entropie donnée
+std::istringstream iss(recoveryPhrase);
+std::vector<std::string> words((std::istream_iterator<std::string>(iss)), std::istream_iterator<std::string>());
 
-	entropy_sequence = hex_str_to_bin_str(entropy_sequence);
-        auto checksum_sequence = this->create_checksum(entropy_sequence);
-        auto expected_recovery_phrase  = this->convert_to_recovery_phrase(checksum_sequence);
-	return expected_recovery_phrase.compare(recovery_phrase) == 0;
+	for (auto &word : words) {
+	std::size_t index = std::find(wordList.begin(), wordList.end(), word) - wordList.begin();
+
+	// Debugging code
+	if (index >= 2048) {
+		std::cerr << "Error: 'index' is not less than 2048, it's " << index << "\n";
+	}
+
+	std::string bits = std::bitset<11>(index).to_string();
+	entropy += bits;
+	}
+
+return entropy;
+}
+
+std::string Bip39::createChecksum(std::string& entropy) {
+		// Calculer le hash SHA256 de l'entropie
+		unsigned char hash[SHA256_DIGEST_LENGTH];
+		SHA256(reinterpret_cast<const unsigned char*>(entropy.data()), entropy.size(), hash);
+
+		// Récupérer les premiers bits du hash pour obtenir la somme de contrôle
+		int checksumLength = entropy.size() / 4; // Nombre de bits de somme de contrôle (8 bits / 32 = 2 bits)
+		std::string checksum;
+		checksum.reserve(checksumLength);
+
+		for (int i = 0; i < checksumLength; ++i) {
+				checksum.push_back(hash[i / 8] >> (7 - (i % 8)) & 1 ? '1' : '0');
+		}
+
+		return checksum;
+}
+
+std::string Bip39::convertToRecoveryPhrase(std::string& entropyWithChecksum) {
+std::string recoveryPhrase;
+recoveryPhrase.reserve(entropyWithChecksum.size() * 3 / 4); // Chaque groupe de 4 bits sera converti en un mot
+
+for (std::size_t i = 0; i < entropyWithChecksum.size(); i += 11) {
+		std::string bits = entropyWithChecksum.substr(i, 11);
+
+if (bits.length() != 11) {
+	std::cerr << "Error: 'bits' length is not 11, it's " << bits.length() << "\n";
+	std::cerr << "entropyWithChecksum length: " << entropyWithChecksum.length() << ", i: " << i << "\n";
+}
+unsigned long long index = std::bitset<11>(bits).to_ullong();
+
+		recoveryPhrase += wordList[index];
+		recoveryPhrase.push_back(' ');
+}
+
+// Supprimer l'espace final
+recoveryPhrase.pop_back();
+
+return recoveryPhrase;
+}
+
+std::string Bip39::createRecoveryPhraseFromEntropy(std::string givenEntropy) {
+		std::string checksum = createChecksum(givenEntropy);
+		std::string entropyWithChecksum = givenEntropy + checksum;
+
+		return convertToRecoveryPhrase(entropyWithChecksum);
+}
+
+bool Bip39::validateRecoveryPhrase(std::string& recoveryPhrase) {
+		std::string verif = recoveryPhrase.erase(std::remove_if(recoveryPhrase.begin(), recoveryPhrase.end(), ::isspace), recoveryPhrase.end());
+
+		if (verif == "") {
+			throw invalid_argument("empty phrase");
+		} else {
+			std::string extractedEntropy = extractEntropy(recoveryPhrase);
+			std::string recreatedPhrase = createRecoveryPhraseFromEntropy(extractedEntropy);
+
+			if (recoveryPhrase == recreatedPhrase) {
+				return recoveryPhrase == recreatedPhrase;
+			}
+			else{
+				throw invalid_argument("Not a mnemonic phrase of a wallet");
+			}
+		}
+
 }
 
 PYBIND11_MODULE(bip39, comp) {
-    py::class_<Bip39>(comp, "Bip39")
-        .def(py::init<const string &>(), py::arg("langage") = "en")
-	.def("get_langage", &Bip39::get_langage)
-	.def("set_langage", &Bip39::set_langage)
-	.def("get_recovery_phrase", &Bip39::get_recovery_phrase)
-	.def("get_entropy", &Bip39::get_entropy)
-        .def("create_recovery_phrase", &Bip39::create_recovery_phrase)
-	.def("create_recovery_phrase_from_entropy", &Bip39::create_recovery_phrase_from_entropy)
-	.def("extract_entropy", &Bip39::extract_entropy)
-	.def("validate_recovery_phrase", &Bip39::validate_recovery_phrase);
+    // py::class_<Bip39>(comp, "Bip39")
+  .def("create_recovery_phrase", &create_recovery_phrase)
+	.def("validateRecoveryPhrase", &validateRecoveryPhrase);
 }

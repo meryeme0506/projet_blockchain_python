@@ -17,6 +17,7 @@ namespace py = pybind11;
 class BIP39Encoder {
 private:
     std::vector<std::string> wordList; 
+
 	// crée une séquence aléatoire de caractères qui 
 	// servira d'entropie pour la création de la phrase secrète
     std::string createRandomEntropy() {
@@ -35,6 +36,9 @@ private:
     }
 
 	//crée une somme de contrôle à partir de la séquence d'entropie
+	// 24 mots 264 bits  => clés 256 bits, dernier mot ==> incertitude, consulter le dic 
+	//Fonction interne. Fonctionnement de l'interface clé 128 bits, 256 clés => 12 mots, clé 256 bits => 24 mots, dire comment générer les mots de contrôles 
+	// la clé en HexaDécimal : 0X => convertir en l'enlevant, vérifier si la clé est une chaîne en HD, si contient un Z cas d'erreurs
     std::string createChecksum(std::string& entropy) {
         // Calculer le hash SHA256 de l'entropie
         unsigned char hash[SHA256_DIGEST_LENGTH];
@@ -56,7 +60,8 @@ private:
 	// et la somme de contrôle en une phrase secrète
     std::string convertToRecoveryPhrase(std::string& entropyWithChecksum) {
     std::string recoveryPhrase;
-    recoveryPhrase.reserve(entropyWithChecksum.size() * 3 / 4); // Chaque groupe de 4 bits sera converti en un mot
+	//
+    recoveryPhrase.reserve(entropyWithChecksum.size() * 3 / 4); // Chaque groupe de 11 bits sera converti en un mot
 
     for (std::size_t i = 0; i < entropyWithChecksum.size(); i += 11) {
         std::string bits = entropyWithChecksum.substr(i, 11);
@@ -65,7 +70,7 @@ private:
 			std::cerr << "Error: 'bits' length is not 11, it's " << bits.length() << "\n";
 			std::cerr << "entropyWithChecksum length: " << entropyWithChecksum.length() << ", i: " << i << "\n";
 		}
-		unsigned long long index = std::bitset<11>(bits).to_ullong();
+		unsigned long index = std::bitset<11>(bits).to_ullong();
 
         recoveryPhrase += wordList[index];
         recoveryPhrase.push_back(' ');
@@ -73,7 +78,7 @@ private:
 
     // Supprimer l'espace final
     recoveryPhrase.pop_back();
-
+	print(recoveryPhrase)
     return recoveryPhrase;
 }
 

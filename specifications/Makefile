@@ -6,6 +6,8 @@ COMPOSANT = bip39
 LIBSO = ${COMPOSANT}.so
 LIBSO_OBJS = ${COMPOSANT}.o 
 
+%.o: %.cpp
+	g++ -c $(CPPFLAGS) $< -o $@
 
 all: ${LIBSO}
 

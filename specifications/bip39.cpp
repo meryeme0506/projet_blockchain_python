@@ -4,7 +4,7 @@
 #include <bitset>
 #include <string>
 #include <cctype>
-#include <pybind11/pybind11.h>
+#include "pybind11.h"
 #include "sha256/sha256/sha256.h"
 
 namespace py = pybind11;

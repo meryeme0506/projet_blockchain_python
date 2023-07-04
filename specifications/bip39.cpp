@@ -5,12 +5,10 @@
 #include <string>
 #include <cctype>
 #include <iostream>
-// #include <pybind11/pybind11.h>
-// #include "sha256/sha256/sha256.h"
+#include <pybind11/pybind11.h>
+#include "../sha256/sha256/sha256.h"
 #include "bip39.h"
 #include "functions.h"
-
-// namespace py = pybind11;
 
 using namespace std;
 
@@ -98,70 +96,6 @@ string Bip39::extract_entropy(string recovery_phrase) {
 	return this->entropy_;
 }
 
-
-// // OK
-// string Bip39::extract_entropy(string recoveryPhrase) {
-// 	string entropy;
-//
-// // vérifie si une phrase secrète correspond à une séquence d'entropie donnée
-// istringstream iss(recoveryPhrase);
-// vector<string> words((istream_iterator<string>(iss)), istream_iterator<string>());
-//
-// 	for (auto &word : words) {
-// 	size_t index = find(wordList.begin(), wordList.end(), word) - wordList.begin();
-//
-// 	// Debugging code
-// 	if (index >= 2048) {
-// 		cerr << "Error: 'index' is not less than 2048, it's " << index << "\n";
-// 	}
-//
-// 	string bits = bitset<11>(index).to_string();
-// 	entropy += bits;
-// 	}
-//
-// return entropy;
-// }
-// OK
-// string Bip39::create_checksum(string& entropy) const{
-// 		// Calculer le hash SHA256 de l'entropie
-// 		unsigned char hash[SHA256_DIGEST_LENGTH];
-// 		SHA256(reinterpret_cast<const unsigned char*>(entropy.data()), entropy.size(), hash);
-//
-// 		// Récupérer les premiers bits du hash pour obtenir la somme de contrôle
-// 		int checksumLength = entropy.size() / 4; // Nombre de bits de somme de contrôle (8 bits / 32 = 2 bits)
-// 		string checksum;
-// 		checksum.reserve(checksumLength);
-//
-// 		for (int i = 0; i < checksumLength; ++i) {
-// 				checksum.push_back(hash[i / 8] >> (7 - (i % 8)) & 1 ? '1' : '0');
-// 		}
-//
-// 		return checksum;
-// }
-// OK
-// string Bip39::convert_to_recovery_phrase(string& entropyWithChecksum) const{
-// string recoveryPhrase;
-// recoveryPhrase.reserve(entropyWithChecksum.size() * 3 / 4); // Chaque groupe de 4 bits sera converti en un mot
-//
-// for (size_t i = 0; i < entropyWithChecksum.size(); i += 11) {
-// 		string bits = entropyWithChecksum.substr(i, 11);
-//
-// if (bits.length() != 11) {
-// 	cerr << "Error: 'bits' length is not 11, it's " << bits.length() << "\n";
-// 	cerr << "entropyWithChecksum length: " << entropyWithChecksum.length() << ", i: " << i << "\n";
-// }
-// unsigned long long index = bitset<11>(bits).to_ullong();
-//
-// 		recoveryPhrase += wordList[index];
-// 		recoveryPhrase.push_back(' ');
-// }
-//
-// // Supprimer l'espace final
-// recoveryPhrase.pop_back();
-//
-// return recoveryPhrase;
-// }
-
 string Bip39::create_recovery_phrase_from_entropy(string given_entropy) {
 		string checksum = create_checksum(given_entropy);
 		string entropyWithChecksum = given_entropy + checksum;
@@ -186,9 +120,7 @@ bool Bip39::validate_recovery_phrase(string& recoveryPhrase) {
 
 }
 
-// PYBIND11_MODULE(bip39, comp) {
-// py::class_<BIP39>(m, "BIP39")
-//     .def("create_recovery_phrase", &create_recovery_phrase)
-// 	.def("validateRecoveryPhrase", &validateRecoveryPhrase);
-//
-// }
+PYBIND11_MODULE(bip39, m) {
+    m.def("create_recovery_phrase", &Bip39::create_recovery_phrase, "creates a new mnemonic phrase");
+		m.def("validate_recovery_phrase", &Bip39::validate_recovery_phrase, "validates if a mnemonic phrase exists");
+}

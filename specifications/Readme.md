@@ -72,7 +72,7 @@ def test_create_recovery_phrase():
 def test_validateRecoveryPhrase():
     # Test avec un bonne phrase mnémonique
     try:
-        validateRecoveryPhrase("legal winner thank year wave sausage worth useful legal winner thank yellow")
+        validateRecoveryPhrase("")
     except Exception:
         assert False, "Expected no exception"
 
@@ -80,12 +80,7 @@ def test_validateRecoveryPhrase():
     try:
         validateRecoveryPhrase("legal winner thank year wave sausage worth useful legal winner thank yellow")
     except ValueError:
-        assert False, "Expected invalid_argument for empty mnemonic phrase"    
-
-    try:
-        validateRecoveryPhrase(A RENTRER)
-    except ValueError:
-        assert False, "Expected invalid_argument for mnemonic phrase corresponding to no wallet"        
+        assert False, "Expected invalid_argument for empty mnemonic phrase"        
 ```
 
 Ces tests vérifient que la fonction create_recovery_phrase(int word_quantity) crée une phrase de récupération avec le bon nombre de mots et qu'elle lève une exception ValueError lorsque le nombre de mots est en dehors de l'intervalle valide et qu'une phrase mnémonique valable est rentré pour validateRecoveryPhrase.

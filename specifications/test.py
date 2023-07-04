@@ -18,21 +18,15 @@ def test_create_recovery_phrase():
         assert False, "Expected ValueError for word count outside of valid range"
 
 def test_validateRecoveryPhrase():
-    # Test avec un bonne phrase mnémonique
-    try:
-        bip.validateRecoveryPhrase("legal winner thank year wave sausage worth useful legal winner thank yellow")
-    except Exception:
-        assert False, "Expected no exception"
-
     # Test avec un phrases mnémonique erronées
     try:
-        bip.validateRecoveryPhrase("    ")
+        bip.validateRecoveryPhrase("")
     except ValueError:
-        assert False, "Expected invalid_argument for empty mnemonic phrase"    
-
+        assert False, "Expected invalid_argument for empty mnemonic phrase"
+    # Test avec un bonne phrase mnémonique
     try:
         bip.validateRecoveryPhrase("legal winner thank year wave sausage worth useful legal winner thank yellow")
     except ValueError:
         pass
     else:
-        assert False, "Expected invalid_argument for mnemonic phrase corresponding to no wallet" 
+        assert False, "Expected invalid_argument for mnemonic phrase corresponding to no wallet"

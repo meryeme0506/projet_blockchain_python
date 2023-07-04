@@ -170,9 +170,7 @@ string Bip39::create_recovery_phrase_from_entropy(string given_entropy) {
 }
 
 bool Bip39::validate_recovery_phrase(string& recoveryPhrase) {
-		string verif = recoveryPhrase.erase(remove_if(recoveryPhrase.begin(), recoveryPhrase.end(), ::isspace), recoveryPhrase.end());
-
-		if (verif == "") {
+		if (recoveryPhrase == "") {
 			throw invalid_argument("empty phrase");
 		} else {
 			string extractedEntropy = extract_entropy(recoveryPhrase);

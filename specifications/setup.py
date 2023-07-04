@@ -1,8 +1,8 @@
 import pybind11
 from setuptools import setup, Extension
 
-module = Extension("bip", sources=["bip.cpp"])
+module = Extension("bip39", sources=["bip39.cpp"])
 
 setup(
-    ext_modules=[bip],
+    ext_modules=[bip39],
 )

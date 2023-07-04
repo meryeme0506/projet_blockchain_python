@@ -1,4 +1,4 @@
-import bip
+import bip39 as bip
 import sys
 
 def create_mnemonic_phrase(arg):

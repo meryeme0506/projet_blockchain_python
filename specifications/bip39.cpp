@@ -10,7 +10,6 @@
 namespace py = pybind11;
 
 #include "bip39.h"
-#include "bip39_functions.h"
 
 using namespace std;
 
@@ -67,22 +66,8 @@ string Bip39::create_recovery_phrase(int word_quantity) {
 	return this->mnemonic_;
 }
 
-string Bip39::create_recovery_phrase_from_entropy(string given_entropy) {
 
-	this->entropy_length = given_entropy.length() * 4;
-	this->checksum = this->entropy_length / 32;
-	this->word_count = (this->entropy_length + this->checksum) / 11;
-	this->entropy_ = given_entropy;
-	if (find(begin(POSSIBLE_WORD_COUNT), end(POSSIBLE_WORD_COUNT), this->word_count) == end(POSSIBLE_WORD_COUNT)) {
-                throw invalid_argument("The entropy given doesn't have a word count in [12, 15, 18, 21, 24] interval");
-        }
-
-	auto entropy_sequence = hex_str_to_bin_str(given_entropy);
-	auto checksum_sequence = this->create_checksum(entropy_sequence);
-	this->mnemonic_ = this->convert_to_recovery_phrase(checksum_sequence);
-	return this->mnemonic_;
-}
-
+//OK 
 string Bip39::extract_entropy(string recovery_phrase) {
 	stringstream ss(recovery_phrase);
 	string buf;
@@ -113,21 +98,8 @@ string Bip39::extract_entropy(string recovery_phrase) {
 	return this->entropy_;
 }
 
-// bool Bip39::validate_recovery_phrase(string& entropy_sequence, string& recovery_phrase) {
-//
-// 	int checksum = entropy_sequence.length() * 4 / 32;
-// 	int word_quantity = (checksum + entropy_sequence.length() * 4) / 11;
-//
-// 	this->word_count = word_quantity;
-//         this->checksum = checksum;
-//         this->entropy_length = entropy_sequence.length() * 4;
-//
-// 	entropy_sequence = hex_str_to_bin_str(entropy_sequence);
-//         auto checksum_sequence = this->create_checksum(entropy_sequence);
-//         auto expected_recovery_phrase  = this->convert_to_recovery_phrase(checksum_sequence);
-// 	return expected_recovery_phrase.compare(recovery_phrase) == 0;
-// }
 
+// OK
 std::string Bip39::extractEntropy(std::string recoveryPhrase) {
 	std::string entropy;
 
@@ -149,7 +121,7 @@ std::vector<std::string> words((std::istream_iterator<std::string>(iss)), std::i
 
 return entropy;
 }
-
+// OK
 std::string Bip39::createChecksum(std::string& entropy) {
 		// Calculer le hash SHA256 de l'entropie
 		unsigned char hash[SHA256_DIGEST_LENGTH];
@@ -166,7 +138,7 @@ std::string Bip39::createChecksum(std::string& entropy) {
 
 		return checksum;
 }
-
+// OK
 std::string Bip39::convertToRecoveryPhrase(std::string& entropyWithChecksum) {
 std::string recoveryPhrase;
 recoveryPhrase.reserve(entropyWithChecksum.size() * 3 / 4); // Chaque groupe de 4 bits sera converti en un mot

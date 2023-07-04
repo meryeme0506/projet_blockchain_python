@@ -189,7 +189,8 @@ bool Bip39::validateRecoveryPhrase(std::string& recoveryPhrase) {
 }
 
 PYBIND11_MODULE(bip39, comp) {
-    // py::class_<Bip39>(comp, "Bip39")
-  .def("create_recovery_phrase", &create_recovery_phrase)
+py::class_<BIP39>(m, "BIP39")
+    .def("create_recovery_phrase", &create_recovery_phrase)
 	.def("validateRecoveryPhrase", &validateRecoveryPhrase);
+	
 }

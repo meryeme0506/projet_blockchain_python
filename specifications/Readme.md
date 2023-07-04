@@ -30,17 +30,21 @@ correspondant.
 
 ## Résumé des fonctions d'interface
 
-1. `create_mnemonic_phrase(int word_quantity)`: Cette fonction crée une phrase secrète avec un nombre spécifique de mots.
+1. `create_mnemonic_phrase(word_quantity)`: Cette fonction crée une phrase secrète avec un nombre spécifique de mots.
 
 2. `validate_recovery_phrase(recoveryPhrase)`: Cette fonction vérifie si
 une phrase secrète correspond à un portefeuille.
 
 ## Gestion des erreurs
 
-1. `create_mnemonic_phrase(int word_quantity)`: Une exception est déclenchée si le nombre de mots spécifié n'est pas dans l'intervalle autorisé (par exemple, 12, 15, 18, 21, 24).
+1. `create_mnemonic_phrase(word_quantity)`: Une exception est déclenchée si le nombre de mots spécifié n'est pas dans l'intervalle autorisé (par exemple, 12, 15, 18, 21, 24).
 
 2. `validate_recovery_phrase(recoveryPhrase)`: Une exception est déclenchée si la phrase de récupération est vides,
 ou si la phrase de récupération ne correspond pas à un portefeuille.
+
+## Interface
+
+L'interface correspond au fichier bip39.py
 
 
 ## Tests

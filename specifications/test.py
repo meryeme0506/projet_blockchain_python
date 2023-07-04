@@ -20,13 +20,13 @@ def test_create_recovery_phrase():
 def test_validateRecoveryPhrase():
     # Test avec un phrases mnémonique erronées
     try:
-        bip.validateRecoveryPhrase("")
+        bip.validate_recovery_phrase("")
     except ValueError:
         assert False, "Expected invalid_argument for empty mnemonic phrase"
     # Test avec un bonne phrase mnémonique
     try:
-        bip.validateRecoveryPhrase("legal winner thank year wave sausage worth useful legal winner thank yellow")
+        bip.validate_recovery_phrase("legal winner thank year wave sausage worth useful legal winner thank yellow")
     except ValueError:
         pass
     else:
-        assert False, "Expected invalid_argument for mnemonic phrase corresponding to no wallet"
+        assert False, "Expected no exception for valid mnemonic phrase"

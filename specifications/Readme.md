@@ -30,16 +30,16 @@ correspondant.
 
 ## Résumé des fonctions d'interface
 
-1. `create_recovery_phrase(int word_quantity)`: Cette fonction crée une phrase secrète avec un nombre spécifique de mots.
+1. `create_mnemonic_phrase(int word_quantity)`: Cette fonction crée une phrase secrète avec un nombre spécifique de mots.
 
-2. `validateRecoveryPhrase(std::string& recoveryPhrase)`: Cette fonction vérifie si
+2. `validate_recovery_phrase(recoveryPhrase)`: Cette fonction vérifie si
 une phrase secrète correspond à un portefeuille.
 
 ## Gestion des erreurs
 
-1. `create_recovery_phrase(int word_quantity)`: Une exception est déclenchée si le nombre de mots spécifié n'est pas dans l'intervalle autorisé (par exemple, 12, 15, 18, 21, 24).
+1. `create_mnemonic_phrase(int word_quantity)`: Une exception est déclenchée si le nombre de mots spécifié n'est pas dans l'intervalle autorisé (par exemple, 12, 15, 18, 21, 24).
 
-2. `validateRecoveryPhrase(std::string& recoveryPhrase)`: Une exception est déclenchée si la phrase de récupération est vides,
+2. `validate_recovery_phrase(recoveryPhrase)`: Une exception est déclenchée si la phrase de récupération est vides,
 ou si la phrase de récupération ne correspond pas à un portefeuille.
 
 
@@ -57,30 +57,32 @@ Voici un exemple de programme de test pour la fonction create_recovery_phrase(in
 def test_create_recovery_phrase():
     # Test avec un nombre de mots valide
     try:
-        create_recovery_phrase(12)
+        create_mnemonic_phrase(12)
     except Exception:
         assert False, "Expected no exception for valid word count"
 
     # Test avec un nombre de mots en dehors de l'intervalle [12, 15, 18, 21, 24]
     try:
-        create_recovery_phrase(10)
+        create_mnemonic_phrase(10)
     except ValueError:
         pass
     else:
         assert False, "Expected ValueError for word count outside of valid range"
 
 def test_validateRecoveryPhrase():
-    # Test avec un bonne phrase mnémonique
+    # Test avec un phrases mnémonique erronées
     try:
-        validateRecoveryPhrase("")
+        validate_recovery_phrase("")
     except Exception:
         assert False, "Expected no exception"
 
-    # Test avec un phrases mnémonique erronées
+    # Test avec un bonne phrase mnémonique
     try:
-        validateRecoveryPhrase("legal winner thank year wave sausage worth useful legal winner thank yellow")
-    except ValueError:
-        assert False, "Expected invalid_argument for empty mnemonic phrase"        
+          validate_recovery_phrase("legal winner thank year wave sausage worth useful legal winner thank yellow")
+      except ValueError:
+          pass
+      else:
+          assert False, "Expected no exception for valid mnemonic phrase"     
 ```
 
 Ces tests vérifient que la fonction create_recovery_phrase(int word_quantity) crée une phrase de récupération avec le bon nombre de mots et qu'elle lève une exception ValueError lorsque le nombre de mots est en dehors de l'intervalle valide et qu'une phrase mnémonique valable est rentré pour validateRecoveryPhrase.

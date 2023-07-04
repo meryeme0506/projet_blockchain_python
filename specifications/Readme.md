@@ -72,13 +72,13 @@ def test_create_recovery_phrase():
 def test_validateRecoveryPhrase():
     # Test avec un bonne phrase mnémonique
     try:
-        validateRecoveryPhrase(A RENTRER)
+        validateRecoveryPhrase("legal winner thank year wave sausage worth useful legal winner thank yellow")
     except Exception:
         assert False, "Expected no exception"
 
     # Test avec un phrases mnémonique erronées
     try:
-        validateRecoveryPhrase("    ")
+        validateRecoveryPhrase("legal winner thank year wave sausage worth useful legal winner thank yellow")
     except ValueError:
         assert False, "Expected invalid_argument for empty mnemonic phrase"    
 

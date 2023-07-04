@@ -6,10 +6,10 @@
 #include <cctype>
 #include <pybind11/pybind11.h>
 #include "sha256/sha256/sha256.h"
+#include "bip39.h"
+#include "functions.h"
 
 namespace py = pybind11;
-
-#include "bip39.h"
 
 using namespace std;
 
